@@ -14,7 +14,7 @@ function( doc, req ) {
         return arr[index];
     }
     var name = rand_elem( word_list.verbs );
-    var data = {"name": name};
+    var data = {"name": name, "verbs": word_list.verbs};
 
     provides("html", function() {
         return Mustache.to_html(ddoc.templates.constrepo, data);

@@ -27,7 +27,7 @@ h1 {
   float:left;
 }
 
-#sidebar {
+.sidebar {
   border:4px solid #dfd;
   padding:8px;
   float:right;

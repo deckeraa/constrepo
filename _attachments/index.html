@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Example CouchApp</title>
+    <title>Constrepo</title>
     <link rel="stylesheet" href="style/main.css" type="text/css">
   </head>
   <body>
@@ -12,11 +12,14 @@
     <div id="profile">
     </div>
     <div id="content"></div>
+    <div id="word_list" class="sidebar">
+      Word list goes here
+    </div>
 
-    <div id="sidebar">
+    <div id="sidebar" class="sidebar">
       <p>Edit welcome message.</p>
       <p>Ideas: You could easily turn this into a photo sharing app, 
-          or a grocery list, or a chat room. <a href="https://github.com/couchapp/example">Code for this app is on Github.</a></p>
+        or a grocery list, or a chat room. <a href="https://github.com/couchapp/example">Code for this app is on Github.</a></p>
     </div>
   </body>
   <script src="/_utils/script/sha1.js"></script>
@@ -29,6 +32,10 @@
   <script src="vendor/couchapp/jquery.mustache.js"></script>
 
 <!-- templates used by app.js -->
+  <script id="name-and-task" type="text/x-mustache" charset="utf-8">
+   <h2>{{name}}</h2>
+   <h3>{{task}}</h3>
+  </script>
   <script id="new-message" type="text/x-mustache" charset="utf-8">
       <div class="avatar">
         {{#gravatar_url}}<img src="{{gravatar_url}}"/>{{/gravatar_url}}

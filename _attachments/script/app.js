@@ -34,7 +34,27 @@ $(function() {
             }
         });
     };
+
+    function handleWordList() {
+        db.openDoc("software_wordlist", {
+            success : function(data) {
+                setupChanges(data.update_seq);
+
+                var rand_elem = function( arr ) {
+                    var index = Math.floor( Math.random()*arr.length % arr.length );
+                    return arr[index];
+                }
+
+                console.log(data);
+                var adj = rand_elem(data.adjectives);
+                var picks = {"name": adj + " " + "Architect", "task" : "I need to validate my object-oriented model using agile methods."};
+                $("#word_list").html(
+                    $.mustache($("#name-and-task").html(), picks));
+            }
+        });
+    };
     drawItems();
+    handleWordList();
     var changesRunning = false;
     function setupChanges(since) {
         if (!changesRunning) {

@@ -23,9 +23,21 @@ Time Estimates
     CLOCK: [2014-12-17 Wed 16:16]--[2014-12-17 Wed 16:24] =>  0:08
 .5h
 *** Write the client-side js to generate the names and tasks using the word list
-    CLOCK: [2014-12-18 Thu 00:01]
+    CLOCK: [2014-12-18 Thu 17:28]
+    CLOCK: [2014-12-18 Thu 12:03]--[2014-12-18 Thu 12:30] =>  0:27
+    CLOCK: [2014-12-18 Thu 00:22]--[2014-12-18 Thu 00:43] =>  0:21
+    CLOCK: [2014-12-18 Thu 00:01]--[2014-12-18 Thu 00:17] =>  0:16
     CLOCK: [2014-12-17 Wed 19:28]--[2014-12-17 Wed 19:51] =>  0:23
 1h
+So I'm 0:39 in and I'm going to have to change directions.
+I had decided to move the word selection to the server side to reduce
+bandwidth and to avoid giving away the whole word list.
+I wrote a show function that selected a random verb from the word list.
+However, the same verb was always returned; I believe that this is
+because show functions are not allowed to have side effects. In essence,
+my page is getting cached.
+Thus the only way to do this is to send the user the word list and
+have client side js do it.
 
 ** Extended functionality
 4h
