@@ -16,11 +16,15 @@ Time Estimates
 ** Basic functionality
 2.5h
 *** Create a "hello world" show function and deploy to ensure software stack is working
-    CLOCK: [2014-12-17 Wed 15:59]
+    CLOCK: [2014-12-17 Wed 15:59]--[2014-12-17 Wed 16:13] =>  0:14
 .25h
 *** Design and generate the word list json document
+    CLOCK: [2014-12-17 Wed 16:26]--[2014-12-17 Wed 16:31] =>  0:05
+    CLOCK: [2014-12-17 Wed 16:16]--[2014-12-17 Wed 16:24] =>  0:08
 .5h
 *** Write the client-side js to generate the names and tasks using the word list
+    CLOCK: [2014-12-18 Thu 00:01]
+    CLOCK: [2014-12-17 Wed 19:28]--[2014-12-17 Wed 19:51] =>  0:23
 1h
 
 ** Extended functionality

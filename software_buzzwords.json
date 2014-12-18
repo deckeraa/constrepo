@@ -1,0 +1,6 @@
+{
+    "adjectives": ["enterprise","objective","agile","structured","object-oriented","visual"],
+    "verbs":["integrate","model","validate"],
+    "direct-objects": ["architect","modeler","studio"],
+    "indirect-objects": ["object-oriented methodology","structed analysis","formal methods","enterprise UML tools"]
+}
