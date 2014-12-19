@@ -44,10 +44,19 @@ $(function() {
                     var index = Math.floor( Math.random()*arr.length % arr.length );
                     return arr[index];
                 }
+                var up = function( str ) {
+                    if( str ) {
+                        return str[0].toUpperCase() + str.substr(1);
+                    }
+                }
 
                 console.log(data);
-                var adj = rand_elem(data.adjectives);
-                var picks = {"name": adj + " " + "Architect", "task" : "I need to validate my object-oriented model using agile methods."};
+                var adj = up( rand_elem(data.adjectives) );
+                var subj = up( rand_elem(data["subjects"]) );
+                var verb = rand_elem( data.verbs );
+                var dir_obj = rand_elem( data["direct-objects"] );
+                var ind_obj = rand_elem( data["indirect-objects"] );
+                var picks = {"name": adj + " " + subj, "task" : "I need to " + verb + " the " + dir_obj + " using " + ind_obj + "."};
                 $("#word_list").html(
                     $.mustache($("#name-and-task").html(), picks));
             }

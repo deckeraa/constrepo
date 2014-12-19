@@ -23,7 +23,8 @@ Time Estimates
     CLOCK: [2014-12-17 Wed 16:16]--[2014-12-17 Wed 16:24] =>  0:08
 .5h
 *** Write the client-side js to generate the names and tasks using the word list
-    CLOCK: [2014-12-18 Thu 17:28]
+    CLOCK: [2014-12-19 Fri 00:29]--[2014-12-19 Fri 00:40] =>  0:11
+    CLOCK: [2014-12-18 Thu 17:28]--[2014-12-18 Thu 18:00] =>  0:32
     CLOCK: [2014-12-18 Thu 12:03]--[2014-12-18 Thu 12:30] =>  0:27
     CLOCK: [2014-12-18 Thu 00:22]--[2014-12-18 Thu 00:43] =>  0:21
     CLOCK: [2014-12-18 Thu 00:01]--[2014-12-18 Thu 00:17] =>  0:16
@@ -38,6 +39,9 @@ because show functions are not allowed to have side effects. In essence,
 my page is getting cached.
 Thus the only way to do this is to send the user the word list and
 have client side js do it.
+
+*** Generalize the task to create generated "selling point" sentences.
+.5h
 
 ** Extended functionality
 4h
