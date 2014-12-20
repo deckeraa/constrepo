@@ -1,5 +1,4 @@
-Constrepo
-=========
+* Constrepo
 
 Constrepo (latin) -- buzz
 
@@ -13,8 +12,7 @@ a familiarity with the platform.
 
 This should be online by 12/21/15.
 
-Time Estimates
-==============
+* Time Estimates
 ** Basic functionality
 2.5h
 *** Create a "hello world" show function and deploy to ensure software stack is working
