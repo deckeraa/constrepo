@@ -3,13 +3,15 @@ Constrepo
 
 Constrepo (latin) -- buzz
 
-Constrepo is a webapp for generating names and tasks entirely from
+Constrepo is a webapp for generating CASE tool names and features.
 software-engineering buzzwords.
 Inspiration for this program came from such things as "Code-first Entity Framework"
 and "Enterprise Architect".
 
 The main purpose of this program was for me to play around with couchapps to gain
 a familiarity with the platform.
+
+This should be online by 12/21/15.
 
 Time Estimates
 ==============
@@ -60,4 +62,8 @@ in the scripts ... a little bit of reverse engineering on the sample couchapp.
 1h
 *** Find jQuery plugin or something to make the table of words in the word list show function prettier
 1h
+
+*** Misc cleanup & formatting
+    CLOCK: [2014-12-19 Fri 23:21]--[2014-12-19 Fri 23:23] =>  0:02
+1.5h
 

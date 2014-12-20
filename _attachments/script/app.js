@@ -56,7 +56,7 @@ $(function() {
                 var subj = up( rand_elem(data["subjects"]) );
 
                 var template_data = {
-                    "name": adj + " " + subj,
+                    "name": adj + " " + subj + "&#0153;",
                     "tasks": []
                 };
 
