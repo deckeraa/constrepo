@@ -41,7 +41,9 @@ Thus the only way to do this is to send the user the word list and
 have client side js do it.
 
 *** Generalize the task to create generated "selling point" sentences.
-.5h
+.75h
+The time estimate on this is to include figuring out the templating going on
+in the scripts ... a little bit of reverse engineering on the sample couchapp.
 
 ** Extended functionality
 4h
