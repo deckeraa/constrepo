@@ -41,6 +41,8 @@ Thus the only way to do this is to send the user the word list and
 have client side js do it.
 
 *** Generalize the task to create generated "selling point" sentences.
+    CLOCK: [2014-12-19 Fri 22:51]--[2014-12-19 Fri 23:18] =>  0:27
+    CLOCK: [2014-12-19 Fri 22:29]--[2014-12-19 Fri 22:46] =>  0:17
 .75h
 The time estimate on this is to include figuring out the templating going on
 in the scripts ... a little bit of reverse engineering on the sample couchapp.

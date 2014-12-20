@@ -41,6 +41,13 @@ h1 {
   margin:4px 0;
 }
 
+#feature-list {
+    list-style: initial;
+}
+#feature-list li {
+    margin-bottom: 12px;
+}
+
 form {
   padding:4px;
   margin:6px;

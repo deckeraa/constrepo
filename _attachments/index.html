@@ -34,15 +34,11 @@
 <!-- templates used by app.js -->
   <script id="name-and-task" type="text/x-mustache" charset="utf-8">
     <h2>{{name}}</h2>
-    {{#tasks}}
-    <h3>{{task}}</h3>
-    {{/tasks}}
-  </script>
-  <script type="text/x-mustache" charset="utf-8">
-    <h2>{{name}}</h2>
-    {{#tasks}
-    <h3>{{task}}</h3>
-    {{/tasks}}
+    <ul id="feature-list">
+      {{#tasks}}
+      <li>{{task}}</li>
+      {{/tasks}}
+    </ul>
   </script>
   <script id="new-message" type="text/x-mustache" charset="utf-8">
       <div class="avatar">

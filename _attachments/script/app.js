@@ -44,40 +44,31 @@ $(function() {
                     var index = Math.floor( Math.random()*arr.length % arr.length );
                     return arr[index];
                 }
+                // changes a word to uppercase
                 var up = function( str ) {
                     if( str ) {
                         return str[0].toUpperCase() + str.substr(1);
                     }
                 }
 
-                console.log(data);
-                
                 // pick a name
                 var adj = up( rand_elem(data.adjectives) );
                 var subj = up( rand_elem(data["subjects"]) );
-
 
                 var template_data = {
                     "name": adj + " " + subj,
                     "tasks": []
                 };
 
+                // generate the features
                 for( var i = 0; i < 3; i++ ) {
-                    var verb = rand_elem( data.verbs );
+                    var verb = up( rand_elem( data.verbs ) );
                     var dir_obj = rand_elem( data["direct-objects"] );
                     var ind_obj = rand_elem( data["indirect-objects"] );
-                    template_data.tasks.push({"task": "I need to " + verb + " the " + dir_obj + " using " + ind_obj + "."});
+                    template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
                 }
 
-//                test_data.name = adj + " " + subj;
-
-//                template_data.tasks.push({"task": "I need to " + verb + " the " + dir_obj + " using " + ind_obj + "."});
-
-//                template_data.tasks.push({"task": "I need to " + verb + " the " + dir_obj + " using " + ind_obj + "."});
-//                template_data.tasks.push("I need to " + verb + " the " + dir_obj + " using " + ind_obj + ".");
-//                var picks = {"name": adj + " " + subj, "task" : "I need to " + verb + " the " + dir_obj + " using " + ind_obj + "."};
                 $("#word_list").html(
-                //    $.mustache($("#name-and-task").html(), picks)
                     $.mustache($("#name-and-task").html(), template_data)
                 );
             }
