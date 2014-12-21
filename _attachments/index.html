@@ -30,6 +30,9 @@
   <script src="vendor/couchapp/jquery.couchProfile.js"></script>
   <script src="vendor/couchapp/md5.js"></script>
   <script src="vendor/couchapp/jquery.mustache.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+  <script src="script/mindmup-editabletable.js"></script>
+  <script src="script/jquery.dataTables.js"></script>
 
 <!-- templates used by app.js -->
   <script id="name-and-task" type="text/x-mustache" charset="utf-8">
@@ -40,6 +43,34 @@
       {{/tasks}}
     </ul>
   </script>
+
+  <script id="view-wordlist" type="text/x-mustache" charset="utf-8">
+   {{#gravatar_url}}<img src="{{gravatar_url}}"/>{{/gravatar_url}}
+   <h3>{{name}}'s buzzword list</h3>
+   <div id="wordlist-customization-area"></div>
+  </script>
+
+  <script id ="wordlist-table" type="text/x-mustache" charset="utf-8">
+   <table id="table_id" class="display">
+   <thead>
+   <tr>
+   <th>Column 1</th>
+   <th>Column 2</th>
+   </tr>
+   </thead>
+   <tbody>
+   <tr>
+   <td>Row 1 Data 1</td>
+   <td>Row 1 Data 2</td>
+   </tr>
+   <tr>
+   <td>Row 2 Data 1</td>
+   <td>Row 2 Data 2</td>
+   </tr>
+   </tbody>
+   </table>
+  </script>
+
   <script id="new-message" type="text/x-mustache" charset="utf-8">
       <div class="avatar">
         {{#gravatar_url}}<img src="{{gravatar_url}}"/>{{/gravatar_url}}
