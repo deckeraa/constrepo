@@ -102,16 +102,18 @@ $(function() {
                         var html = "";
                         html += "<table id='table_id' class='display'>";
                         html += "<thead><th>Category</th><th>Words</th></thead>";
+                        html += "<tbody>"
                         var keys = Object.keys(obj)
                         for(var i in keys ){
                             var key = keys[i];
                             if( key != '_id' && key != '_rev' ) {
-                                html+="<tr><td>" + key + "</td></tr>";
+                                html+="<tr><th>" + key + "</th></tr>";
                                 for( var j in obj[key] ) {
-                                    html+="<tr><td></td><td>" + obj[key][j] + "</td></tr>";
+                                    html+="<tr><th></th><td>" + obj[key][j] + "</td></tr>";
                                 }
                             }
                         }
+                        html+="</tbody>";
                         html+="</table>";
                         return html;
                     }
@@ -121,6 +123,9 @@ $(function() {
                     var table_html = $.mustache($("#wordlist-table").html(), wordlist)*/
                     $("#wordlist-customization-area").html( html );
                     $("#wordlist-customization-area>table").editableTableWidget();
+                    $("#wordlist-customization-area>table td").on('validate', function (evt, newValue) {
+                        console.log("changed");
+                    });
 
 
 
