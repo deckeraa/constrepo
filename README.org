@@ -55,6 +55,7 @@ in the scripts ... a little bit of reverse engineering on the sample couchapp.
     CLOCK: [2014-12-20 Sat 12:50]--[2014-12-20 Sat 12:55] =>  0:05
 2h
 *** Add a show function to modify word lists
+    CLOCK: [2014-12-22 Mon 19:18]
     CLOCK: [2014-12-20 Sat 14:14]--[2014-12-20 Sat 14:24] =>  0:10
 1.5h
    Just adding this functionality directly into index.html.

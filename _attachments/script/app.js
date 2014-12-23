@@ -97,10 +97,35 @@ $(function() {
             console.log("logged in ", r);
             $("#profile").couchProfile(r, {
                 profileReady : function(profile) {
-                    var table_html = $.mustache($("#wordlist-table").html(), wordlist)
-                    $("#wordlist-customization-area").html( table_html );
-//                    $("#wordlist-customization-area>table").DataTable();                  
+
+                    var obj_to_table = function ( obj ) {
+                        var html = "";
+                        html += "<table id='table_id' class='display'>";
+                        html += "<thead><th>Category</th><th>Words</th></thead>";
+                        var keys = Object.keys(obj)
+                        for(var i in keys ){
+                            var key = keys[i];
+                            if( key != '_id' && key != '_rev' ) {
+                                html+="<tr><td>" + key + "</td></tr>";
+                                for( var j in obj[key] ) {
+                                    html+="<tr><td></td><td>" + obj[key][j] + "</td></tr>";
+                                }
+                            }
+                        }
+                        html+="</table>";
+                        return html;
+                    }
+
+                    var html = obj_to_table( wordlist );
+/* mustache template system
+                    var table_html = $.mustache($("#wordlist-table").html(), wordlist)*/
+                    $("#wordlist-customization-area").html( html );
                     $("#wordlist-customization-area>table").editableTableWidget();
+
+
+
+
+
 /*                    $("#create-message").submit(function(e){
                         e.preventDefault();
                         var form = this, doc = $(form).serializeObject();
