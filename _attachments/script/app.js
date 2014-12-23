@@ -123,28 +123,19 @@ $(function() {
                     var table_html = $.mustache($("#wordlist-table").html(), wordlist)*/
                     $("#wordlist-customization-area").html( html );
                     $("#wordlist-customization-area>table").editableTableWidget();
-                    $("#wordlist-customization-area>table td").on('validate', function (evt, newValue) {
+                    $("#wordlist-customization-area>table td").on('change', function (evt, newValue) {
                         console.log("changed");
+                        db.saveDoc( 
+                            {"_id": r.userCtx.name +"_wordlist", "text": "foo"}, 
+                            {success: function(data) { console.log("saved: ",data); }}
+                    );
                     });
-
-
-
-
-
-/*                    $("#create-message").submit(function(e){
-                        e.preventDefault();
-                        var form = this, doc = $(form).serializeObject();
-                        doc.created_at = new Date();
-                        doc.profile = profile;
-                        db.saveDoc(doc, {success : function() {form.reset();}});
-                        return false;
-                    }).find("input").focus();*/
-                }
-            });
         },
         loggedOut : function() {
             console.log("logged out");
             $("#profile").html('<p>Please log in to see your profile.</p>');
         }
-    });
- });
+            });
+            }});
+});
+            
