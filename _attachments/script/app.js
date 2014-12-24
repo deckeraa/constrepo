@@ -40,46 +40,60 @@ $(function() {
         });
     };
 
-    function handleWordList() {
-        db.openDoc("software_wordlist", {
-            success : function(data) {
-                setupChanges(data.update_seq);
-
-                wordlist = data;
-
-                var rand_elem = function( arr ) {
-                    var index = Math.floor( Math.random()*arr.length % arr.length );
-                    return arr[index];
-                }
-                // changes a word to uppercase
-                var up = function( str ) {
-                    if( str ) {
-                        return str[0].toUpperCase() + str.substr(1);
-                    }
-                }
-
-                // pick a name
-                var adj = up( rand_elem(data.adjectives) );
-                var subj = up( rand_elem(data["subjects"]) );
-
-                var template_data = {
-                    "name": adj + " " + subj + "&#0153;",
-                    "tasks": []
-                };
-
-                // generate the features
-                for( var i = 0; i < 3; i++ ) {
-                    var verb = up( rand_elem( data.verbs ) );
-                    var dir_obj = rand_elem( data["direct-objects"] );
-                    var ind_obj = rand_elem( data["indirect-objects"] );
-                    template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
-                }
-
-                $("#word_list").html(
-                    $.mustache($("#name-and-task").html(), template_data)
-                );
+    function pickWordsFromList( wordlist ) {
+        var rand_elem = function( arr ) {
+            var index = Math.floor( Math.random()*arr.length % arr.length );
+            return arr[index];
+        }
+        // changes a word to uppercase
+        var up = function( str ) {
+            if( str ) {
+                return str[0].toUpperCase() + str.substr(1);
             }
-        });
+        }
+
+        // pick a name
+        var adj = up( rand_elem(wordlist.adjectives) );
+        var subj = up( rand_elem(wordlist["subjects"]) );
+
+        var template_data = {
+            "name": adj + " " + subj + "&#0153;",
+            "tasks": []
+        };
+
+        // generate the features
+        for( var i = 0; i < 3; i++ ) {
+            var verb = up( rand_elem( wordlist.verbs ) );
+            var dir_obj = rand_elem( wordlist["direct-objects"] );
+            var ind_obj = rand_elem( wordlist["indirect-objects"] );
+            template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
+        }
+
+        $("#word_list").html(
+            $.mustache($("#name-and-task").html(), template_data)
+        );
+    };
+
+    function handleWordList(user_name) {
+        var gotList = false;
+        if( user_name ){
+            db.openDoc(user_name +"_wordlist", {
+                success : function (data) {
+                    gotList = true;
+                    wordlist = data;
+                    pickWordsFromList(wordlist);
+                }});
+        }
+        if(!gotList) {
+            db.openDoc("software_wordlist", {
+                success : function(data) {
+                    if(!gotList) {
+                        wordlist = data;
+                        pickWordsFromList(wordlist);                
+                    }
+                }});
+        }
+
     };
     drawItems();
     handleWordList();
@@ -117,19 +131,30 @@ $(function() {
                         html+="</table>";
                         return html;
                     }
+                    
+                    db.openDoc(r.userCtx.name +"_wordlist", {
+                        success : function (data) {
+                            gotList = true;
+                            wordlist = data;
+                        //    pickWordsFromList(wordlist);
 
-                    var html = obj_to_table( wordlist );
-/* mustache template system
-                    var table_html = $.mustache($("#wordlist-table").html(), wordlist)*/
-                    $("#wordlist-customization-area").html( html );
-                    $("#wordlist-customization-area>table").editableTableWidget();
-                    $("#wordlist-customization-area>table td").on('change', function (evt, newValue) {
-                        console.log("changed");
-                        db.saveDoc( 
-                            {"_id": r.userCtx.name +"_wordlist", "text": "foo"}, 
-                            {success: function(data) { console.log("saved: ",data); }}
-                    );
-                    });
+
+                            var html = obj_to_table( wordlist );
+                            /* mustache template system
+                               var table_html = $.mustache($("#wordlist-table").html(), wordlist)*/
+                            $("#wordlist-customization-area").html( html );
+                            $("#wordlist-customization-area>table").editableTableWidget();
+                            $("#wordlist-customization-area>table td").on('change', function (evt, newValue) {
+                                console.log("changed");
+                                db.saveDoc( 
+                                    {"_id": r.userCtx.name +"_wordlist", "_rev": wordlist._rev,"text": "foo"}, 
+                                    {success: function(data) { console.log("saved: ",data); }}
+                                );
+                            });
+                        },
+                        error: function (data) {
+                            console.log("failed:", data);
+                        }});
         },
         loggedOut : function() {
             console.log("logged out");
