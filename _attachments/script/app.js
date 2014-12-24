@@ -24,102 +24,13 @@ $(function() {
         design = path[3],
         db = $.couch.db(path[1]);
     var wordlist = {};
+    var user_name = null;;
 
-    function drawItems() {
-        db.view(design + "/recent-items", {
-            descending : "true",
-            limit : 50,
-            update_seq : true,
-            success : function(data) {
-                setupChanges(data.update_seq);
-                var them = $.mustache($("#recent-messages").html(), {
-                    items : data.rows.map(function(r) {return r.value;})
-                });
-                $("#content").html(them);
-            }
-        });
-    };
-
-    function pickWordsFromList( wordlist ) {
-        var using_default_wordlist = false;
-        
-        var rand_elem = function( arr ) {
-            var index = Math.floor( Math.random()*arr.length % arr.length );
-            return arr[index];
-        }
-        // changes a word to uppercase
-        var up = function( str ) {
-            if( str ) {
-                return str[0].toUpperCase() + str.substr(1);
-            }
-        }
-
-        // pick a name
-        var adj = up( rand_elem(wordlist.adjectives) );
-        var subj = up( rand_elem(wordlist["subjects"]) );
-
-        var template_data = {
-            "name": adj + " " + subj + "&#0153;",
-            "tasks": []
-        };
-
-        // generate the features
-        for( var i = 0; i < 3; i++ ) {
-            var verb = up( rand_elem( wordlist.verbs ) );
-            var dir_obj = rand_elem( wordlist["direct-objects"] );
-            var ind_obj = rand_elem( wordlist["indirect-objects"] );
-            template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
-        }
-
-        $("#word_list").html(
-            $.mustache($("#name-and-task").html(), template_data)
-        );
-    };
-
-    // loads the wordlist and then calls the done_fn
-    // passing in the wordlist as the argument
-    function loadWordList(done_fn, user_name) {
-        if( user_name ){
-            db.openDoc(user_name +"_wordlist", {
-                success : function (data) {
-                    wordlist = data;
-                    using_default_wordlist = false;
-                    done_fn(wordlist);
-                },
-            error: function (data) {
-                db.openDoc("software_wordlist", {
-                success : function(data) {
-                    wordlist = data;
-                    using_default_wordlist = true;
-                    done_fn(wordlist);                
-                }});
-            }});
-        }
-        else {
-            db.openDoc("software_wordlist", {
-                success : function(data) {
-                    wordlist = data;
-                    using_default_wordlist = true;
-                    done_fn(wordlist);    
-                }            
-            });
-        }
-
-    };
-    drawItems();
-    loadWordList(pickWordsFromList);
-    var changesRunning = false;
-    function setupChanges(since) {
-        if (!changesRunning) {
-            var changeHandler = db.changes(since);
-            changesRunning = true;
-            changeHandler.onChange(drawItems);
-        }
-    }
     $.couchProfile.templates.profileReady = $("#view-wordlist").html();
     $("#account").couchLogin({
         loggedIn : function(r) {
             console.log("logged in ", r);
+            userCtx = r.userCtx.name;
             $("#profile").couchProfile(r, {
                 profileReady : function(profile) {
 
@@ -163,7 +74,7 @@ $(function() {
                         return obj;
                     }
                     
-                  
+                    
                     var setup_table = function() {
                         var html = obj_to_table( wordlist );
                         $("#wordlist-customization-area").html( html );
@@ -205,11 +116,113 @@ $(function() {
                         setup_table();
                     }
                 },
-        loggedOut : function() {
-            console.log("logged out");
-            $("#profile").html('<p>Please log in to see your profile.</p>');
-        }
+                loggedOut : function() {
+                    console.log("logged out");
+                    $("#profile").html('<p>Please log in to see your profile.</p>');
+                }
             });
+        }});
+
+    function drawItems() {
+        db.view(design + "/recent-items", {
+            descending : "true",
+            limit : 50,
+            update_seq : true,
+            success : function(data) {
+                setupChanges(data.update_seq);
+                var them = $.mustache($("#recent-messages").html(), {
+                    items : data.rows.map(function(r) {return r.value;})
+                });
+                $("#content").html(them);
+            }
+        });
+    };
+
+    function pickWordsFromList( ) {
+        var using_default_wordlist = false;
+        
+        var rand_elem = function( arr ) {
+            var index = Math.floor( Math.random()*arr.length % arr.length );
+            return arr[index];
+        }
+        // changes a word to uppercase
+        var up = function( str ) {
+            if( str ) {
+                return str[0].toUpperCase() + str.substr(1);
+            }
+        }
+
+        // pick a name
+        var adj = up( rand_elem(wordlist.adjectives) );
+        var subj = up( rand_elem(wordlist["subjects"]) );
+
+        var template_data = {
+            "name": adj + " " + subj + "&#0153;",
+            "tasks": []
+        };
+
+        // generate the features
+        for( var i = 0; i < 3; i++ ) {
+            var verb = up( rand_elem( wordlist.verbs ) );
+            var dir_obj = rand_elem( wordlist["direct-objects"] );
+            var ind_obj = rand_elem( wordlist["indirect-objects"] );
+            template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
+        }
+
+        $("#word_list").html(
+            $.mustache($("#name-and-task").html(), template_data)
+        );
+        $("#word_list").find("#generate-new-enterprise-product").on(
+            'click', function () {
+                console.log("clicked");
+                pickWordsFromList();
+            });
+                                                                     
+    };
+
+    // loads the wordlist and then calls the done_fn
+    // passing in the wordlist as the argument
+    function loadWordList(done_fn, user_name) {
+        if( user_name ){
+            db.openDoc(user_name +"_wordlist", {
+                success : function (data) {
+                    console.log("loaded user doc");
+                    wordlist = data;
+                    using_default_wordlist = false;
+                    done_fn(wordlist);
+                },
+            error: function (data) {
+                db.openDoc("software_wordlist", {
+                success : function(data) {
+                    console.log("loaded default doc (1)");
+                    wordlist = data;
+                    using_default_wordlist = true;
+                    done_fn(wordlist);                
+                }});
             }});
+        }
+        else {
+            db.openDoc("software_wordlist", {
+                success : function(data) {
+                    console.log("loaded default doc (2)");
+                    wordlist = data;
+                    using_default_wordlist = true;
+                    done_fn(wordlist);    
+                }            
+            });
+        }
+
+    };
+    drawItems();
+    loadWordList(pickWordsFromList, user_name);
+    var changesRunning = false;
+    function setupChanges(since) {
+        if (!changesRunning) {
+            var changeHandler = db.changes(since);
+            changesRunning = true;
+            changeHandler.onChange(drawItems);
+        }
+    }
+    
 });
             
