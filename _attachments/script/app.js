@@ -41,6 +41,8 @@ $(function() {
     };
 
     function pickWordsFromList( wordlist ) {
+        var using_default_wordlist = false;
+        
         var rand_elem = function( arr ) {
             var index = Math.floor( Math.random()*arr.length % arr.length );
             return arr[index];
@@ -74,29 +76,38 @@ $(function() {
         );
     };
 
-    function handleWordList(user_name) {
-        var gotList = false;
+    // loads the wordlist and then calls the done_fn
+    // passing in the wordlist as the argument
+    function loadWordList(done_fn, user_name) {
         if( user_name ){
             db.openDoc(user_name +"_wordlist", {
                 success : function (data) {
-                    gotList = true;
                     wordlist = data;
-                    pickWordsFromList(wordlist);
+                    using_default_wordlist = false;
+                    done_fn(wordlist);
+                },
+            error: function (data) {
+                db.openDoc("software_wordlist", {
+                success : function(data) {
+                    wordlist = data;
+                    using_default_wordlist = true;
+                    done_fn(wordlist);                
                 }});
+            }});
         }
-        if(!gotList) {
+        else {
             db.openDoc("software_wordlist", {
                 success : function(data) {
-                    if(!gotList) {
-                        wordlist = data;
-                        pickWordsFromList(wordlist);                
-                    }
-                }});
+                    wordlist = data;
+                    using_default_wordlist = true;
+                    done_fn(wordlist);    
+                }            
+            });
         }
 
     };
     drawItems();
-    handleWordList();
+    loadWordList(pickWordsFromList);
     var changesRunning = false;
     function setupChanges(since) {
         if (!changesRunning) {
@@ -132,30 +143,42 @@ $(function() {
                         return html;
                     }
                     
-                    db.openDoc(r.userCtx.name +"_wordlist", {
-                        success : function (data) {
-                            gotList = true;
-                            wordlist = data;
-                        //    pickWordsFromList(wordlist);
+                  
+                    var setup_table = function() {
+                        var html = obj_to_table( wordlist );
+                        $("#wordlist-customization-area").html( html );
+                        $("#wordlist-customization-area>table").editableTableWidget();
+                        $("#wordlist-customization-area>table td").on('change', function (evt, newValue) {
+                            console.log("changed");
+                            db.saveDoc( 
+                                wordlist,
+                                {success: function(data) { console.log("saved: ",data); }}
+                            );
+                        });
+                    }
 
-
-                            var html = obj_to_table( wordlist );
-                            /* mustache template system
-                               var table_html = $.mustache($("#wordlist-table").html(), wordlist)*/
-                            $("#wordlist-customization-area").html( html );
-                            $("#wordlist-customization-area>table").editableTableWidget();
-                            $("#wordlist-customization-area>table td").on('change', function (evt, newValue) {
-                                console.log("changed");
-                                db.saveDoc( 
-                                    {"_id": r.userCtx.name +"_wordlist", "_rev": wordlist._rev,"text": "foo"}, 
-                                    {success: function(data) { console.log("saved: ",data); }}
-                                );
-                            });
-                        },
-                        error: function (data) {
-                            console.log("failed:", data);
-                        }});
-        },
+                    if( using_default_wordlist ) {
+                        db.openDoc(r.userCtx.name +"_wordlist", {
+                            success : function (data) {
+                                gotList = true;
+                                wordlist = data;
+                                using_default_wordlist = false;
+                                setup_table();
+                            },
+                            error: function (data) {
+                                wordlist._id = r.userCtx.name + "_wordlist";
+                                delete wordlist._rev; // get server-assigned rev
+                                db.saveDoc( wordlist, { success: function (data) {
+                                    wordlist = data;
+                                    using_default_wordlist = false;
+                                    setup_table();
+                                }});
+                            }});
+                    }
+                    else {
+                        setup_table();
+                    }
+                },
         loggedOut : function() {
             console.log("logged out");
             $("#profile").html('<p>Please log in to see your profile.</p>');
