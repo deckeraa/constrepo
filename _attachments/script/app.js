@@ -142,6 +142,26 @@ $(function() {
                         html+="</table>";
                         return html;
                     }
+                    // convert the table back into an object -- pretty hacky
+                    var table_to_obj = function ( table_selector ) {
+                        var obj = {};
+                        var rows = table_selector.find("tbody tr").toArray();
+                        var cur_key = null;
+                        for (var i in rows) {
+                            var new_key_maybe = $(rows[i]).find("th").html();
+                            if( new_key_maybe && new_key_maybe != "" ) {
+                                obj[new_key_maybe] = [];
+                                cur_key = new_key_maybe;
+                            }
+                            if( cur_key ) {
+                                var new_value_maybe = $(rows[i]).find("td").html();
+                                if( new_value_maybe ) {
+                                    obj[cur_key].push( new_value_maybe );
+                                }
+                            }
+                        }
+                        return obj;
+                    }
                     
                   
                     var setup_table = function() {
@@ -150,9 +170,15 @@ $(function() {
                         $("#wordlist-customization-area>table").editableTableWidget();
                         $("#wordlist-customization-area>table td").on('change', function (evt, newValue) {
                             console.log("changed");
+                            var new_wordlist = table_to_obj($("#table_id"));
+                            new_wordlist._id = wordlist._id;
+                            new_wordlist._rev = wordlist._rev;
                             db.saveDoc( 
-                                wordlist,
-                                {success: function(data) { console.log("saved: ",data); }}
+                                new_wordlist,
+                                {success: function(data) { 
+                                    console.log("saved: ",data); 
+                                    wordlist._rev = data.rev;
+                                }}
                             );
                         });
                     }
