@@ -116,46 +116,6 @@ $(function() {
     var page_wordlist = {};
     var user_name = null;
 
-/*    var temp = false;
-
-    var test_promise = new Promise( function (resolve, reject) {
-        console.log("eval'ing test_promise");
-        if( temp == false ) {
-            temp = true;
-            resolve("foo");
-        }
-        error(temp);
-    });
-    
-    test_promise.then( 
-        function(response) {
-            console.log("then'd (1a) to response: " + response);
-            return new Promise( function (resolve, reject) {
-                console.log("eval'ing second promise");
-                resolve("bar");
-                });
-        },
-        function(error) {
-            console.log("then'd (1a) to error: " + error);
-            return error;
-        }).then(
-            function(response) {
-                console.log("then'd (1b) to response: " + response);
-            },
-            function(error) {
-                console.log("then'd (1b) to error: " + error);
-            }); 
-
-    test_promise.then( 
-        function(response) {
-            console.log("then'd (2a) to response: " + response);
-        },
-        function(error) {
-            console.log("then'd (2a) to error: " + error);
-        });
-
-    test_promise.then( function(response) { console.log("another: " + response); });*/
-
     var user_name_promise = new Promise( function (resolve, reject) {
         $.couch.session({
             success: function(data) {
@@ -182,10 +142,6 @@ $(function() {
         });
     }
 
-/*    user_name_promise.then( 
-        function(name) {console.log("***initial log in to user: "+ name)},
-        function() {console.log("***user was not logged in on initial load.");});*/
-
     // load the wordlist 
     user_name_promise.then(
         function(name) { return openDoc_promise(name+"_wordlist"); }
@@ -206,18 +162,6 @@ $(function() {
                     function(error) {
                         console.log("Error: Could not locate a word list. Enterprise Product will not be generated.");
                     });
-
-/*    var wordlist_promise = user_name_promise.then(
-        function(name) { 
-            console.log("+++need to open custom");
-            db.openDoc(r.userCtx.name +"_wordlist", {
-                success : function (data) {
-                    console.log("+++opened custom: ",data);
-                    return data;
-                }})},
-        function() {
-            console.log("+++need to open generic");
-        });*/
 
     $.couchProfile.templates.profileReady = $("#view-wordlist").html();
     $("#account").couchLogin({
@@ -289,83 +233,8 @@ $(function() {
         });
     };
 
-    /*function pickWordsFromList( ) {
-        var using_default_wordlist = false;
-        
-        var rand_elem = function( arr ) {
-            var index = Math.floor( Math.random()*arr.length % arr.length );
-            return arr[index];
-        }
-        // changes a word to uppercase
-        var up = function( str ) {
-            if( str ) {
-                return str[0].toUpperCase() + str.substr(1);
-            }
-        }
-
-        // pick a name
-        var adj = up( rand_elem(wordlist.adjectives) );
-        var subj = up( rand_elem(wordlist["subjects"]) );
-
-        var template_data = {
-            "name": adj + " " + subj + "&#0153;",
-            "tasks": []
-        };
-
-        // generate the features
-        for( var i = 0; i < 3; i++ ) {
-            var verb = up( rand_elem( wordlist.verbs ) );
-            var dir_obj = rand_elem( wordlist["direct-objects"] );
-            var ind_obj = rand_elem( wordlist["indirect-objects"] );
-            template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
-        }
-
-        $("#word_list").html(
-            $.mustache($("#name-and-task").html(), template_data)
-        );
-        $("#word_list").find("#generate-new-enterprise-product").on(
-            'click', function () {
-                console.log("clicked");
-                pickWordsFromList();
-            });
-                                                                     
-    };*/
-
-    // loads the wordlist and then calls the done_fn
-    // passing in the wordlist as the argument
-    /*function loadWordList(done_fn, user_name) {
-        if( user_name ){
-            db.openDoc(user_name +"_wordlist", {
-                success : function (data) {
-                    console.log("loaded user doc");
-                    wordlist = data;
-                    using_default_wordlist = false;
-                    done_fn(wordlist);
-                },
-            error: function (data) {
-                db.openDoc("software_wordlist", {
-                success : function(data) {
-                    console.log("loaded default doc (1)");
-                    wordlist = data;
-                    using_default_wordlist = true;
-                    done_fn(wordlist);                
-                }});
-            }});
-        }
-        else {
-            db.openDoc("software_wordlist", {
-                success : function(data) {
-                    console.log("loaded default doc (2)");
-                    wordlist = data;
-                    using_default_wordlist = true;
-                    done_fn(wordlist);    
-                }            
-            });
-        }
-
-    };*/
     drawItems();
-  //  loadWordList(pickWordsFromList, user_name);
+
     var changesRunning = false;
     function setupChanges(since) {
         if (!changesRunning) {
