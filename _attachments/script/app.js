@@ -66,6 +66,52 @@ $(function() {
         return obj;
     }
 
+    function pickWordsFromList(wordlist) {
+//        var using_default_wordlist = false;
+        
+        var rand_elem = function( arr ) {
+            var index = Math.floor( Math.random()*arr.length % arr.length );
+            return arr[index];
+        }
+        // changes a word to uppercase
+        var up = function( str ) {
+            if( str ) {
+                return str[0].toUpperCase() + str.substr(1);
+            }
+        }
+
+        // pick a name
+        var adj = up( rand_elem(wordlist.adjectives) );
+        var subj = up( rand_elem(wordlist["subjects"]) );
+
+        var template_data = {
+            "name": adj + " " + subj + "&#0153;",
+            "tasks": []
+        };
+
+        // generate the features
+        for( var i = 0; i < 3; i++ ) {
+            var verb = up( rand_elem( wordlist.verbs ) );
+            var dir_obj = rand_elem( wordlist["direct-objects"] );
+            var ind_obj = rand_elem( wordlist["indirect-objects"] );
+            template_data.tasks.push({"task": verb + " " + dir_obj + " using " + ind_obj + "."});
+        }
+        return template_data;
+    }
+
+    // impure code
+    var insert_enterprise = function(template_data) {
+        $("#word_list").html(
+            $.mustache($("#name-and-task").html(), template_data)
+        );
+        $("#word_list").find("#generate-new-enterprise-product").on(
+            'click', function () {
+                console.log("clicked");
+                insert_enterprise(pickWordsFromList(wordlist));
+            });
+    }
+
+
     // code that gets executed sequentially starts here
     var wordlist = {};
     var user_name = null;
@@ -142,14 +188,24 @@ $(function() {
 
     // load the wordlist 
     user_name_promise.then(
-        function(name) { return openDoc_promise(name+"_wordlist"); },
-        function() {console.log("===user was not logged in on initial load."); 
-                   }).then(
-                       function(wordlist) { console.log("===got user list: ", wordlist); },
-                       function(error) { console.log("===user list does not exist"); });
-                       
+        function(name) { return openDoc_promise(name+"_wordlist"); }
+    ).then(
+        function(wordlist) { 
+            insert_enterprise(pickWordsFromList(wordlist));
+            return wordlist; 
+        }).catch(
+            function(error) { 
+                return openDoc_promise("software_wordlist");
+            }).then(
+                function(wordlist) { 
+                    insert_enterprise(pickWordsFromList(wordlist));
+                    return wordlist;
+                }).catch(
+                    function(error) {
+                        console.log("Error: Could not locate a word list. Enterprise Product will not be generated.");
+                    });
 
-    var wordlist_promise = user_name_promise.then(
+/*    var wordlist_promise = user_name_promise.then(
         function(name) { 
             console.log("+++need to open custom");
             db.openDoc(r.userCtx.name +"_wordlist", {
@@ -159,7 +215,7 @@ $(function() {
                 }})},
         function() {
             console.log("+++need to open generic");
-        });
+        });*/
 
     $.couchProfile.templates.profileReady = $("#view-wordlist").html();
     $("#account").couchLogin({
@@ -235,7 +291,7 @@ $(function() {
         });
     };
 
-    function pickWordsFromList( ) {
+    /*function pickWordsFromList( ) {
         var using_default_wordlist = false;
         
         var rand_elem = function( arr ) {
@@ -275,11 +331,11 @@ $(function() {
                 pickWordsFromList();
             });
                                                                      
-    };
+    };*/
 
     // loads the wordlist and then calls the done_fn
     // passing in the wordlist as the argument
-    function loadWordList(done_fn, user_name) {
+    /*function loadWordList(done_fn, user_name) {
         if( user_name ){
             db.openDoc(user_name +"_wordlist", {
                 success : function (data) {
@@ -309,17 +365,17 @@ $(function() {
             });
         }
 
-    };
+    };*/
     drawItems();
-    loadWordList(pickWordsFromList, user_name);
-//    var changesRunning = false;
-/*    function setupChanges(since) {
+  //  loadWordList(pickWordsFromList, user_name);
+    var changesRunning = false;
+    function setupChanges(since) {
         if (!changesRunning) {
             var changeHandler = db.changes(since);
             changesRunning = true;
             changeHandler.onChange(drawItems);
         }
-    }*/
+    }
     
 });
             
