@@ -55,7 +55,7 @@ in the scripts ... a little bit of reverse engineering on the sample couchapp.
     CLOCK: [2014-12-20 Sat 12:50]--[2014-12-20 Sat 12:55] =>  0:05
 2h
 *** Add a show function to modify word lists
-    CLOCK: [2014-12-24 Wed 00:19]
+    CLOCK: [2014-12-24 Wed 00:19]--[2014-12-24 Wed 00:29] =>  0:10
     CLOCK: [2014-12-23 Tue 23:30]--[2014-12-24 Wed 00:02] =>  0:32
     CLOCK: [2014-12-23 Tue 20:33]--[2014-12-23 Tue 21:20] =>  0:47
     CLOCK: [2014-12-23 Tue 16:57]--[2014-12-23 Tue 17:18] =>  0:21
@@ -71,6 +71,11 @@ in the scripts ... a little bit of reverse engineering on the sample couchapp.
    Also did not factor in document rewrite/null case/ownership questions.
    Note to self: figure out what to do with the concurrency problems when
    syncing data between local js and the db.
+
+*** Refactor the app to use js promises
+    CLOCK: [2014-12-24 Wed 23:27]--[2014-12-24 Wed 23:43] =>  0:16
+    CLOCK: [2014-12-24 Wed 02:09]--[2014-12-24 Wed 02:43] =>  0:34
+3h
    
 ** Make it pretty
 2h
