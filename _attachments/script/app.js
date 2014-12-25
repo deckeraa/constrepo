@@ -107,13 +107,13 @@ $(function() {
         $("#word_list").find("#generate-new-enterprise-product").on(
             'click', function () {
                 console.log("clicked");
-                insert_enterprise(pickWordsFromList(wordlist));
+                insert_enterprise(pickWordsFromList(page_wordlist));
             });
     }
 
 
     // code that gets executed sequentially starts here
-    var wordlist = {};
+    var page_wordlist = {};
     var user_name = null;
 
 /*    var temp = false;
@@ -192,6 +192,7 @@ $(function() {
     ).then(
         function(wordlist) { 
             insert_enterprise(pickWordsFromList(wordlist));
+            page_wordlist = wordlist;
             return wordlist; 
         }).catch(
             function(error) { 
@@ -199,6 +200,7 @@ $(function() {
             }).then(
                 function(wordlist) { 
                     insert_enterprise(pickWordsFromList(wordlist));
+                    page_wordlist = wordlist;
                     return wordlist;
                 }).catch(
                     function(error) {
@@ -224,11 +226,8 @@ $(function() {
             userCtx = r.userCtx.name;
             $("#profile").couchProfile(r, {
                 profileReady : function(profile) {
-
-
                     
-                    
-                    var setup_table = function() {
+                    var setup_table = function(wordlist) {
                         var html = obj_to_table( wordlist );
                         $("#wordlist-customization-area").html( html );
                         $("#wordlist-customization-area>table").editableTableWidget();
@@ -247,21 +246,19 @@ $(function() {
                         });
                     }
 
-                    if( using_default_wordlist ) {
+                    if( user_name_promise ) {
                         db.openDoc(r.userCtx.name +"_wordlist", {
                             success : function (data) {
-                                gotList = true;
-                                wordlist = data;
-                                using_default_wordlist = false;
-                                setup_table();
+                                page_wordlist = data;
+                                setup_table(page_wordlist);
                             },
                             error: function (data) {
+                                // save a new document (user word list)
+                                var wordlist = page_wordlist;
                                 wordlist._id = r.userCtx.name + "_wordlist";
                                 delete wordlist._rev; // get server-assigned rev
                                 db.saveDoc( wordlist, { success: function (data) {
-                                    wordlist = data;
-                                    using_default_wordlist = false;
-                                    setup_table();
+                                    setup_table(page_wordlist);
                                 }});
                             }});
                     }
