@@ -246,12 +246,16 @@ $(function() {
                         });
                     }
 
-                    if( user_name_promise ) {
+                    user_name_promise.then(function (user_name) {
+                        setup_table(page_wordlist);
+                    }, function () {
+                        // load the user's wordlist
                         db.openDoc(r.userCtx.name +"_wordlist", {
                             success : function (data) {
                                 page_wordlist = data;
                                 setup_table(page_wordlist);
                             },
+                            // if we couldn't, then generate a word list for the user
                             error: function (data) {
                                 // save a new document (user word list)
                                 var wordlist = page_wordlist;
@@ -261,10 +265,7 @@ $(function() {
                                     setup_table(page_wordlist);
                                 }});
                             }});
-                    }
-                    else {
-                        setup_table();
-                    }
+                    });
                 },
                 loggedOut : function() {
                     console.log("logged out");
